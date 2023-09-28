@@ -1,19 +1,13 @@
-from math import ceil
-
 def solution(progresses, speeds):
-    daysLeft = list(map(lambda x: (ceil((100 - progresses[x]) / speeds[x])), range(len(progresses))))
-    count = 1
-    retList = []
-
-    for i in range(len(daysLeft)):
-        try:
-            if daysLeft[i] < daysLeft[i + 1]:
-                retList.append(count)
-                count = 1
-            else:
-                daysLeft[i + 1] = daysLeft[i]
-                count += 1
-        except IndexError:
-            retList.append(count)
-
-    return retList
+    answer = []
+    count = 0
+    for i in range(len(speeds)):
+        a = progresses[i]-100
+        if progresses[i] < 100:
+            count = -(a//speeds[i])
+            progresses = list(map(lambda x,y: x+(y*count),progresses,speeds))
+        else:
+            continue
+        b = list(map(lambda x: 1 if x<100 else 0, progresses))
+        answer.append((b.index(max(b)) if max(b) != 0 else len(b))-sum(answer))
+    return answer
