@@ -2,12 +2,12 @@ from airflow import DAG
 import pendulum
 from airflow.operators.empty import EmptyOperator
 
-with (((DAG(
+with DAG(
         dag_id="dags_conn_test2",
         schedule=None,
         start_date=pendulum.datetime(2024, 6, 14, tz="Asia/Seoul"),
         catchup=False
-) as dag))):
+) as dag:
     t1 = EmptyOperator(
         task_id="t1"
     )
