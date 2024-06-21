@@ -6,7 +6,7 @@ with DAG(
     dag_id='dags_seoul_bikelist',
     schedule='0 7 * * *',
     start_date=pendulum.datetime(2024,6,16, tz='Asia/Seoul'),
-    catchup=False
+    catchup=True
 ) as dag:
     '''서울시 공공자전거 실시간 대여 현황'''
     seoul_api2csv_bike_list = SeoulApiToCsvOperator(
