@@ -49,7 +49,7 @@ x-airflow-common:
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
-  image: airflow_custom:2.9.1_HdfsHive
+  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.9.1}
   # build: .
   environment:
     &airflow-common-env
@@ -61,11 +61,6 @@ x-airflow-common:
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
-    AIRFLOW__SMTP__SMTP_HOST: 'smtp.gmail.com'
-    AIRFLOW__SMTP__SMTP_USER: 'kalwraith@gmail.com'
-    AIRFLOW__SMTP__SMTP_PASSWORD: '##SMTP_PASSWORD##'
-    AIRFLOW__SMTP__SMTP_PORT: 587
-    AIRFLOW__SMTP__SMTP_MAIL_FROM: 'kalwraith@gmail.com'
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
     # See https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#scheduler-health-check-server
@@ -78,10 +73,10 @@ x-airflow-common:
     # If you want to use it, outcomment it and replace airflow.cfg with the name of your config file
     # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
   volumes:
-    - /home/ubuntu/airflow_2.9.1/dags:/opt/airflow/dags
+    - /home/ubuntu/TIL/de/airflow/dags:/opt/airflow/dags
     - /home/ubuntu/logs:/opt/airflow/logs
     - /home/ubuntu/config:/opt/airflow/config
-    - /home/ubuntu/airflow_2.9.1/plugins:/opt/airflow/plugins
+    - /home/ubuntu/TIL/de/airflow/plugins:/opt/airflow/plugins
     - /home/ubuntu/ingest:/opt/airflow/ingest
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
@@ -100,13 +95,12 @@ services:
       POSTGRES_DB: sjlim
       TZ: Asia/Seoul
     volumes:
-      - postgres-db-volume_custom:/var/lib/postgresql/data
+      - postgres-custom-db-volume:/var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
       network_custom:
         ipv4_address: 172.28.0.3
-
   postgres:
     image: postgres:13
     environment:
@@ -327,10 +321,9 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-
 volumes:
   postgres-db-volume:
-  postgres-db-volume_custom:
+  postgres-custom-db-volume:
 
 networks:
   network_custom:
