@@ -284,6 +284,17 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-
+  postgres_custom:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: sjlim
+      POSTGRES_PASSWORD: sjlim
+      POSTGRES_DB: sjlim
+      TZ: Asia/Seoul
+    volumes:
+      - postgres-custom-db-volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 volumes:
   postgres-db-volume:
+  postgres-custom-db-volume:
